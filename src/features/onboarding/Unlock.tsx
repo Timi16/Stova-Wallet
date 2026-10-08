@@ -1,3 +1,4 @@
+import { friendlyMessage } from '@/app/errors';
 import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAccounts, useActiveAccount, useSession } from '@/app/session';
@@ -57,7 +58,7 @@ export function Unlock() {
     try {
       await unlockWithPasskey();
     } catch (ex) {
-      setErr((ex as Error).message || 'Unlock was cancelled.');
+      setErr(friendlyMessage(ex));
     } finally {
       setBusy(false);
     }
@@ -75,7 +76,7 @@ export function Unlock() {
       else if (ex instanceof WrongPasswordError) {
         const left = SECURITY.maxUnlockFails - (session.fails + 1);
         setErr(left > 0 ? `Wrong password. ${left} ${left === 1 ? 'try' : 'tries'} left.` : 'Wrong password.');
-      } else setErr((ex as Error).message);
+      } else setErr(friendlyMessage(ex));
       setPw('');
     } finally {
       setBusy(false);

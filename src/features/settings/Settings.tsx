@@ -1,3 +1,4 @@
+import { friendlyMessage } from '@/app/errors';
 import { useMemo, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAccounts, useActiveAccount, useSession } from '@/app/session';
@@ -60,7 +61,7 @@ export function Settings() {
       setNp2('');
       toast('Password updated on this device');
     } catch (e) {
-      setPwErr(e instanceof WrongPasswordError ? 'Current password is wrong.' : (e as Error).message);
+      setPwErr(e instanceof WrongPasswordError ? 'Current password is wrong.' : friendlyMessage(e));
     } finally {
       setBusy(false);
     }
@@ -132,7 +133,7 @@ export function Settings() {
                       await disablePasskey();
                       toast('Fingerprint unlock turned off. You can delete the passkey in your device settings.');
                     } catch (e) {
-                      toast((e as Error).message, 'warn');
+                      toast(friendlyMessage(e), 'warn');
                     } finally {
                       setPkBusy(false);
                     }
@@ -255,7 +256,7 @@ export function Settings() {
               setPkPw('');
               toast('Fingerprint unlock is on');
             } catch (ex) {
-              setPkErr(ex instanceof WrongPasswordError ? 'Wrong password.' : (ex as Error).message || 'Passkey setup was cancelled.');
+              setPkErr(ex instanceof WrongPasswordError ? 'Wrong password.' : friendlyMessage(ex));
             } finally {
               setPkBusy(false);
             }

@@ -1,3 +1,4 @@
+import { friendlyMessage } from '@/app/errors';
 import { useMemo, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { onboardingDraft } from '@/app/drafts';
@@ -53,7 +54,7 @@ export function Import() {
           navigate('/home', { replace: true });
         }
       } catch (e) {
-        toast((e as Error).message, 'warn');
+        toast(friendlyMessage(e), 'warn');
       } finally {
         setBusy(false);
       }

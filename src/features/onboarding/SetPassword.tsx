@@ -1,3 +1,4 @@
+import { friendlyMessage } from '@/app/errors';
 import { useMemo, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { onboardingDraft } from '@/app/drafts';
@@ -132,7 +133,7 @@ export function SetPassword() {
               text={
                 e instanceof StorageUnavailableError
                   ? "This browser wouldn't let STOVA store anything. Private browsing and full storage do this. Nothing was created, and your words are still safe."
-                  : (e as Error)?.message || 'Please try again.'
+                  : friendlyMessage(e)
               }
             />
             <Footer>

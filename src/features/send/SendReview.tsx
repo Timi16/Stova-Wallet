@@ -1,3 +1,4 @@
+import { friendlyMessage } from '@/app/errors';
 import { useEffect, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useActiveAccount, useSession } from '@/app/session';
@@ -24,7 +25,7 @@ import {
   type BuiltPayment,
   type SubmitResult,
 } from '@/core/stellar';
-import { CooldownError, hasPasskey, isUnlocked, signTransaction, unlock, unlockWithPasskey, WrongPasswordError } from '@/core/vault';
+import { hasPasskey, isUnlocked, signTransaction, unlock, unlockWithPasskey } from '@/core/vault';
 import { BackButton, Footer, Header, Main, Screen } from '@/ui/Screen';
 import { Orb } from '@/ui/Orb';
 import { KV, KVCard } from '@/ui/Row';
@@ -240,7 +241,7 @@ export function SendReview() {
               setUnlockOpen(false);
               void sign();
             } catch (ex) {
-              setPwErr(ex instanceof CooldownError ? ex.message : ex instanceof WrongPasswordError ? 'Wrong password.' : (ex as Error).message);
+              setPwErr(friendlyMessage(ex));
             }
           }}
           className="flex flex-col gap-3"
@@ -257,7 +258,7 @@ export function SendReview() {
                   setUnlockOpen(false);
                   void sign();
                 } catch (ex) {
-                  setPwErr((ex as Error).message);
+                  setPwErr(friendlyMessage(ex));
                 }
               }}
             >

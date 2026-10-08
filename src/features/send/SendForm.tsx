@@ -1,3 +1,4 @@
+import { friendlyMessage } from '@/app/errors';
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { Link, Navigate, useNavigate, useSearchParams } from 'react-router-dom';
 import { useActiveAccount } from '@/app/session';
@@ -172,7 +173,7 @@ export function SendForm() {
       navigate('/send/review');
     } catch (ex) {
       if (ex instanceof PaymentBlockedError) setBlocked(`${ex.friendly.title}. ${ex.friendly.message}`);
-      else setBlocked((ex as Error).message || "Couldn't build the transaction.");
+      else setBlocked(friendlyMessage(ex));
     } finally {
       setBuilding(false);
     }

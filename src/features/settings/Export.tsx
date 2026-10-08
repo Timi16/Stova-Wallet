@@ -1,3 +1,4 @@
+import { friendlyMessage } from '@/app/errors';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useActiveAccount, useSession } from '@/app/session';
@@ -5,7 +6,7 @@ import { copySecret } from '@/app/clipboard';
 import { useToast } from '@/app/toast';
 import { SECURITY } from '@/config';
 import { chunkAddress } from '@/core/keys';
-import { CooldownError, revealSecrets, WrongPasswordError } from '@/core/vault';
+import { revealSecrets, WrongPasswordError } from '@/core/vault';
 import { BackButton, Footer, Header, Main, Screen } from '@/ui/Screen';
 import { PasswordInput } from '@/ui/Field';
 import { IconCheck, IconClose, IconCopy, IconEye, IconLock, IconWarn } from '@/ui/Icons';
@@ -54,7 +55,7 @@ export function Export() {
       setPw('');
       setSt('show');
     } catch (ex) {
-      setPwErr(ex instanceof WrongPasswordError ? 'Wrong password.' : ex instanceof CooldownError ? ex.message : (ex as Error).message);
+      setPwErr(ex instanceof WrongPasswordError ? 'Wrong password.' : friendlyMessage(ex));
     } finally {
       setBusy(false);
     }

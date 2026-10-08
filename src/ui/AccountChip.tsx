@@ -1,3 +1,4 @@
+import { friendlyMessage } from '@/app/errors';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useQueries } from '@tanstack/react-query';
@@ -71,7 +72,7 @@ export function AccountSheet({ open, onClose }: { open: boolean; onClose: () => 
       onClose();
       toast(`Switched to ${a.name}`);
     } catch (e) {
-      toast((e as Error).message, 'warn');
+      toast(friendlyMessage(e), 'warn');
     }
   };
 

@@ -10,6 +10,36 @@ import { fromBase64, randomBytes, toBase64 } from './crypto';
 
 export type PasskeySupport = { ok: true } | { ok: false; reason: string };
 
+/** A passkey problem explained in plain words (the browser's own messages are not for people). */
+export class PasskeyError extends Error {
+  cancelled: boolean;
+  constructor(message: string, cancelled = false) {
+    super(message);
+    this.name = 'PasskeyError';
+    this.cancelled = cancelled;
+  }
+}
+
+function explain(e: unknown, action: 'create' | 'get'): PasskeyError {
+  if (e instanceof PasskeyError) return e;
+  const name = (e as { name?: string })?.name ?? '';
+  switch (name) {
+    case 'NotAllowedError':
+    case 'AbortError':
+      return new PasskeyError(action === 'create' ? "Passkey setup was cancelled or timed out. Nothing changed; try again when you're ready." : 'Unlock was cancelled or timed out. Try again, or use your password.', true);
+    case 'InvalidStateError':
+      return new PasskeyError('A passkey for STOVA already exists on this device. Remove it in your device settings, or turn this off and on again to replace it.');
+    case 'NotSupportedError':
+      return new PasskeyError("This device can't create a passkey. Your password still works.");
+    case 'SecurityError':
+      return new PasskeyError('Passkeys need a secure page on a real domain (localhost or the deployed site).');
+    case 'ConstraintError':
+      return new PasskeyError("This authenticator can't verify it's you (no fingerprint, face or PIN set up).");
+    default:
+      return new PasskeyError(action === 'create' ? "Couldn't set up the passkey. Your password still works." : "Couldn't unlock with the passkey. Use your password instead.");
+  }
+}
+
 function b64url(bytes: Uint8Array): string {
   return toBase64(bytes).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 }
@@ -46,9 +76,11 @@ type PrfResults = { prf?: { enabled?: boolean; results?: { first?: ArrayBuffer }
  */
 export async function createPasskey(label: string): Promise<{ credentialId: string; prfSalt: string; secret: Uint8Array }> {
   const sup = passkeySupport();
-  if (!sup.ok) throw new Error(sup.reason);
+  if (!sup.ok) throw new PasskeyError(sup.reason);
   const prfSalt = randomBytes(32);
-  const create = await navigator.credentials.create({
+  let create: Credential | null;
+  try {
+    create = await navigator.credentials.create({
     publicKey: {
       challenge: randomBytes(32) as BufferSource,
       rp: { name: 'STOVA Wallet', id: window.location.hostname },
@@ -60,13 +92,16 @@ export async function createPasskey(label: string): Promise<{ credentialId: stri
       authenticatorSelection: { residentKey: 'required', userVerification: 'required' },
       timeout: 120_000,
       extensions: { prf: { eval: { first: prfSalt as BufferSource } } } as AuthenticationExtensionsClientInputs,
-    },
-  });
-  if (!create || !('rawId' in create)) throw new Error('Passkey creation was cancelled.');
+      },
+    });
+  } catch (e) {
+    throw explain(e, 'create');
+  }
+  if (!create || !('rawId' in create)) throw new PasskeyError('Passkey setup was cancelled. Nothing changed.', true);
   const cred = create as PublicKeyCredential;
   const ext = cred.getClientExtensionResults() as PrfResults;
   if (!ext.prf?.enabled && !ext.prf?.results?.first) {
-    throw new Error("This authenticator can't derive keys (no PRF support). Try a different browser or device.");
+    throw new PasskeyError("This device's passkeys can't be used to unlock a wallet (no PRF support). Try a newer browser or device; your password still works.");
   }
   const credentialId = b64url(new Uint8Array(cred.rawId));
   // Some platforms only return the PRF output on an assertion, not at creation.
@@ -77,20 +112,25 @@ export async function createPasskey(label: string): Promise<{ credentialId: stri
 /** Asks the authenticator (fingerprint / face / PIN) for the PRF secret of our salt. */
 export async function assertPrf(credentialId: string, prfSalt: string): Promise<Uint8Array> {
   const sup = passkeySupport();
-  if (!sup.ok) throw new Error(sup.reason);
-  const assertion = await navigator.credentials.get({
-    publicKey: {
-      challenge: randomBytes(32) as BufferSource,
-      rpId: window.location.hostname,
-      allowCredentials: [{ type: 'public-key', id: fromB64url(credentialId) as BufferSource }],
-      userVerification: 'required',
-      timeout: 120_000,
-      extensions: { prf: { eval: { first: fromBase64(prfSalt) as BufferSource } } } as AuthenticationExtensionsClientInputs,
-    },
-  });
-  if (!assertion || !('rawId' in assertion)) throw new Error('Unlock was cancelled.');
+  if (!sup.ok) throw new PasskeyError(sup.reason);
+  let assertion: Credential | null;
+  try {
+    assertion = await navigator.credentials.get({
+      publicKey: {
+        challenge: randomBytes(32) as BufferSource,
+        rpId: window.location.hostname,
+        allowCredentials: [{ type: 'public-key', id: fromB64url(credentialId) as BufferSource }],
+        userVerification: 'required',
+        timeout: 120_000,
+        extensions: { prf: { eval: { first: fromBase64(prfSalt) as BufferSource } } } as AuthenticationExtensionsClientInputs,
+      },
+    });
+  } catch (e) {
+    throw explain(e, 'get');
+  }
+  if (!assertion || !('rawId' in assertion)) throw new PasskeyError('Unlock was cancelled. Try again, or use your password.', true);
   const ext = (assertion as PublicKeyCredential).getClientExtensionResults() as PrfResults;
   const first = ext.prf?.results?.first;
-  if (!first) throw new Error("This authenticator didn't return a key. Use your password instead.");
+  if (!first) throw new PasskeyError("This passkey didn't return a key. Use your password instead.");
   return new Uint8Array(first);
 }

@@ -1,3 +1,4 @@
+import { friendlyMessage } from '@/app/errors';
 import { useState } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { useQueries } from '@tanstack/react-query';
@@ -237,7 +238,7 @@ export function Accounts() {
                         toast(`${ed.name} hidden from this device`);
                         setEdit(null);
                       } catch (e) {
-                        toast((e as Error).message, 'warn');
+                        toast(friendlyMessage(e), 'warn');
                       }
                     }}
                     className="btn-danger h-11 text-sm"
@@ -271,7 +272,7 @@ export function Accounts() {
           <>
             <main className="flex flex-1 flex-col items-center justify-center gap-3 p-6 text-center">
               <span className="text-[26px] font-bold">Couldn&apos;t add the account</span>
-              <span className="max-w-[300px] text-sm text-muted">{(e as Error)?.message ?? 'Please try again.'}</span>
+              <span className="max-w-[300px] text-sm text-muted">{friendlyMessage(e)}</span>
             </main>
             <footer className="flex flex-col gap-2 px-4 pb-6 pt-2">
               <button type="button" className="btn-primary" onClick={job.reset}>
