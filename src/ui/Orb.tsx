@@ -1,18 +1,18 @@
 import type { CSSProperties } from 'react';
 
 /**
- * Account avatar: a glowing orb whose colours come from the public key, so
- * two accounts never look alike and the same account always looks the same.
+ * Account avatar: a glowing orb in STOVA's own colours only (lavender light,
+ * lavender, violet, violet deep, ink). Accounts are told apart by how light
+ * or deep the orb is and where the highlight sits, chosen from the public key,
+ * so the same account always looks the same.
  */
 const PALETTES: { a: string; b: string; c: string; glow: string }[] = [
-  { a: '#D3C8FF', b: '#7C6AF0', c: '#2BB4C9', glow: '#A48CFF' },
-  { a: '#FFD6A5', b: '#FF8A65', c: '#C2469B', glow: '#FF8A65' },
-  { a: '#A7F3D0', b: '#2DD4BF', c: '#0E7490', glow: '#2DD4BF' },
-  { a: '#FDE68A', b: '#F59E0B', c: '#B45309', glow: '#F59E0B' },
-  { a: '#FBCFE8', b: '#EC4899', c: '#7E22CE', glow: '#EC4899' },
-  { a: '#BFDBFE', b: '#3B82F6', c: '#1E3A8A', glow: '#60A5FA' },
-  { a: '#D9F99D', b: '#84CC16', c: '#3F6212', glow: '#A3E635' },
-  { a: '#FECACA', b: '#F87171', c: '#7F1D1D', glow: '#F87171' },
+  { a: '#D9CFFF', b: '#8E7CF5', c: '#4F3FCF', glow: '#B4A3FF' }, // brand: lavender → violet → deep
+  { a: '#F1ECFF', b: '#B4A3FF', c: '#6B5BE0', glow: '#D9CFFF' }, // light lavender
+  { a: '#B4A3FF', b: '#6B5BE0', c: '#2E2380', glow: '#8E7CF5' }, // violet
+  { a: '#D9CFFF', b: '#4F3FCF', c: '#1B1240', glow: '#8E7CF5' }, // deep violet
+  { a: '#8E7CF5', b: '#4F3FCF', c: '#1B1240', glow: '#6B5BE0' }, // ink
+  { a: '#E6DFFF', b: '#9F90F8', c: '#3D2FB5', glow: '#B4A3FF' }, // soft
 ];
 
 export function paletteFor(publicKey: string) {
