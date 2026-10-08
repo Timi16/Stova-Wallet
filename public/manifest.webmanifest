@@ -1,0 +1,10 @@
+{
+  "name": "STOVA Wallet",
+  "short_name": "STOVA",
+  "description": "A Stellar wallet that lives in your browser. Your keys never leave your device.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0E0E12",
+  "theme_color": "#0E0E12",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }]
+}

@@ -1,0 +1,321 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/outfit';
+@import '@fontsource/ibm-plex-mono/500.css';
+
+/* STOVA · Lumen design tokens (from the Brand board). */
+@theme {
+  --color-ground: #0e0e12;
+  --color-surface: #17171d;
+  --color-surface-2: #1e1e26;
+  --color-surface-3: #26262f;
+  --color-line: #22222b;
+  --color-text: #f4f4f8;
+  --color-text-2: #c9c9d6;
+  --color-muted: #9a9aae;
+  --color-dim: #6e6e82;
+  --color-accent: #b4a3ff;
+  --color-accent-hover: #d3c8ff;
+  --color-accent-ink: #1b1240;
+  --color-lavender: #d9cfff;
+  --color-violet: #8e7cf5;
+  --color-violet-deep: #4f3fcf;
+  --color-testnet: #38bdf8;
+  --color-good: #5be49b;
+  --color-bad: #ff7b7b;
+  --color-bad-ink: #2a0b0b;
+  --color-warn: #f5c451;
+  --color-usdc: #2775ca;
+
+  --font-sans: 'Outfit Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --radius-card: 20px;
+  --radius-btn: 18px;
+  --radius-input: 16px;
+
+  --animate-spin-slow: spin 5s linear infinite;
+  --animate-pop: pop 0.18s ease-out;
+  --animate-rise: rise 0.22s ease-out;
+  --animate-shake: shake 0.25s;
+  --animate-pulse-soft: pulse 1.2s infinite;
+  --animate-glow: glow 1.6s ease-in-out infinite;
+  --animate-ripple: ripple 1.4s ease-out infinite;
+  --animate-orb-halo: orbHalo 2.8s ease-in-out infinite;
+
+  @keyframes pop {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes rise {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: none;
+    }
+  }
+  @keyframes shake {
+    0%,
+    100% {
+      transform: none;
+    }
+    25% {
+      transform: translateX(-5px);
+    }
+    75% {
+      transform: translateX(5px);
+    }
+  }
+  @keyframes pulse {
+    0%,
+    100% {
+      opacity: 0.5;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  @keyframes glow {
+    0%,
+    100% {
+      opacity: 0.55;
+      transform: scale(0.96);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.04);
+    }
+  }
+  @keyframes ripple {
+    from {
+      transform: scale(0.7);
+      opacity: 0.8;
+    }
+    to {
+      transform: scale(1.35);
+      opacity: 0;
+    }
+  }
+  @keyframes orbHalo {
+    0%,
+    100% {
+      opacity: 0.35;
+    }
+    50% {
+      opacity: 0.7;
+    }
+  }
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+    background: var(--color-ground);
+    color: var(--color-text);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overscroll-behavior-y: none;
+  }
+  #root {
+    min-height: 100dvh;
+  }
+  button {
+    font: inherit;
+    cursor: pointer;
+    color: inherit;
+  }
+  button:disabled {
+    cursor: not-allowed;
+  }
+  input,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-dim);
+  }
+  a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+  a:hover {
+    color: var(--color-accent-hover);
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+  input[type='checkbox'] {
+    accent-color: var(--color-accent);
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Base button shape, registered as a utility so component classes can @apply it. */
+@utility btn {
+  @apply inline-flex h-[54px] items-center justify-center gap-2 rounded-[18px] px-[18px] text-base font-semibold select-none transition-[filter,transform] duration-150 active:scale-[0.985] disabled:active:scale-100;
+}
+
+@layer components {
+  .btn-primary {
+    @apply btn bg-accent text-accent-ink hover:brightness-105 disabled:bg-surface-2 disabled:text-dim disabled:hover:brightness-100;
+  }
+  .btn-secondary {
+    @apply btn bg-surface-2 text-text hover:brightness-110 disabled:text-dim disabled:hover:brightness-100;
+  }
+  .btn-danger {
+    @apply btn bg-bad text-bad-ink hover:brightness-105;
+  }
+  .btn-ghost {
+    @apply inline-flex h-12 items-center justify-center gap-2 rounded-[18px] bg-transparent text-[15px] font-medium text-muted hover:text-text;
+  }
+  .btn-sm {
+    @apply h-12 text-sm;
+  }
+  .icon-btn {
+    @apply inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-surface text-text hover:bg-surface-2;
+  }
+  .card {
+    @apply rounded-[20px] bg-surface;
+  }
+  .card-inner {
+    @apply rounded-[20px] bg-surface-2;
+  }
+  .input {
+    @apply box-border h-[52px] w-full rounded-[16px] border border-line bg-surface px-4 text-base text-text outline-none focus:border-accent;
+  }
+  .input-bad {
+    @apply border-[1.5px] border-bad;
+  }
+  .label {
+    @apply text-[13px] font-semibold text-muted;
+  }
+  .hint {
+    @apply text-xs text-dim;
+  }
+  .error-text {
+    @apply text-[13px] font-medium text-bad;
+  }
+  .pill {
+    @apply inline-flex items-center gap-1.5 rounded-full bg-surface px-[11px] py-[5px] text-xs font-semibold text-muted;
+  }
+  .kv {
+    @apply flex min-h-12 items-center justify-between gap-3 text-sm;
+  }
+  .kv + .kv {
+    @apply border-t border-line;
+  }
+  .seg {
+    @apply flex gap-1.5 rounded-full bg-surface p-1;
+  }
+  .seg-btn {
+    @apply h-10 flex-1 rounded-full text-sm font-medium text-muted;
+  }
+  .seg-btn[aria-selected='true'],
+  .seg-btn[aria-pressed='true'] {
+    @apply bg-surface-3 font-semibold text-text;
+  }
+  .chip {
+    @apply h-9 rounded-full bg-surface px-3.5 text-[13px] font-medium text-muted;
+  }
+  .chip[aria-pressed='true'] {
+    @apply bg-surface-3 font-semibold text-text;
+  }
+  .scroll-y {
+    @apply min-h-0 flex-1 overflow-y-auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-surface-3) transparent;
+  }
+  .blur-secret {
+    filter: blur(6px);
+    user-select: none;
+  }
+
+  /* Motion. Shimmer skeletons, a soft rise on every screen, staggered list rows. */
+  .skeleton {
+    @apply relative block overflow-hidden rounded-xl bg-surface-2;
+  }
+  .skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.09) 45%, rgba(180, 163, 255, 0.14) 55%, transparent 100%);
+    animation: shimmer 1.5s ease-in-out infinite;
+  }
+  .screen-in {
+    animation: screenIn 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  .stagger > * {
+    animation: pop 0.34s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  }
+  .stagger > :nth-child(2) {
+    animation-delay: 40ms;
+  }
+  .stagger > :nth-child(3) {
+    animation-delay: 80ms;
+  }
+  .stagger > :nth-child(4) {
+    animation-delay: 120ms;
+  }
+  .stagger > :nth-child(5) {
+    animation-delay: 160ms;
+  }
+  .stagger > :nth-child(n + 6) {
+    animation-delay: 200ms;
+  }
+  .scrim-in {
+    animation: fadeIn 0.2s ease-out both;
+  }
+}
+
+@keyframes shimmer {
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes screenIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
