@@ -75,7 +75,7 @@ export function Accounts() {
           </span>
         </span>
         <span className="flex flex-col items-end gap-0.5">
-          <span className="text-sm font-semibold tabular">{info ? (info.exists ? `${formatAmount(info.xlm.balance)} XLM` : 'Not activated') : '…'}</span>
+          <span className="text-sm font-semibold tabular">{info ? (info.exists ? `${formatAmount(info.xlm.balance, { max: 2 })} XLM` : 'Not activated') : '…'}</span>
           <span className="text-[11px] text-muted">{usdc ? `${formatAmount(usdc.balance)} USDC` : info?.exists ? 'no USDC' : ''}</span>
         </span>
         <IconChevronRight className="h-4 w-4 shrink-0 text-dim" />

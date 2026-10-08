@@ -117,7 +117,7 @@ export function AccountSheet({ open, onClose }: { open: boolean; onClose: () => 
                   <span className="font-mono text-[11px] text-muted">{shortAddress(a.publicKey)}</span>
                 </span>
                 <span className="flex flex-col items-end gap-px">
-                  <span className="text-sm font-semibold tabular">{info ? info.exists ? `${formatAmount(info.xlm.balance)} XLM` : 'Not activated' : <span className="skeleton h-3.5 w-20" />}</span>
+                  <span className="text-sm font-semibold tabular">{info ? info.exists ? `${formatAmount(info.xlm.balance, { max: 2 })} XLM` : 'Not activated' : <span className="skeleton h-3.5 w-20" />}</span>
                   <span className="text-[11px] text-muted">{usdc ? `${formatAmount(usdc.balance)} USDC` : info?.exists ? 'no USDC yet' : a.kind === 'imported' ? 'imported' : ''}</span>
                 </span>
                 <span className={`flex h-[22px] w-[22px] shrink-0 items-center justify-center rounded-full ${isActive ? 'bg-accent text-accent-ink' : 'text-transparent'}`}>

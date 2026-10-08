@@ -101,11 +101,11 @@ export function Home() {
           ) : (
             <>
               <div className="flex items-baseline gap-2">
-                <span className="text-5xl font-bold leading-none tracking-[-0.035em] tabular">{mask(formatAmount(data?.xlm.balance ?? '0'))}</span>
+                <span className="text-5xl font-bold leading-none tracking-[-0.035em] tabular">{mask(formatAmount(data?.xlm.balance ?? '0', { max: 2 }))}</span>
                 <span className="text-xl font-medium text-muted">XLM</span>
               </div>
               <div className="flex items-center gap-2 text-[13px] text-muted">
-                <span className="pill text-text">{funded ? `Spendable ${mask(formatAmount(data!.xlm.spendable))}` : 'Nothing to spend yet'}</span>
+                <span className="pill text-text">{funded ? `Spendable ${mask(formatAmount(data!.xlm.spendable, { max: 2 }))}` : 'Nothing to spend yet'}</span>
                 <button type="button" onClick={doRefresh} className="inline-flex h-7 items-center gap-1.5 px-1.5 text-xs font-medium text-muted hover:text-text">
                   <IconRefresh className={`h-[13px] w-[13px] ${spinning || info.isFetching ? 'animate-spin' : ''}`} />
                   {spinning || info.isFetching ? 'Updating…' : data ? `Updated ${timeLabel(new Date(data.fetchedAt).toISOString())}` : 'Refresh'}
