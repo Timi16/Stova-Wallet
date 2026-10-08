@@ -6,7 +6,7 @@ import { NETWORK } from '@/config';
 import { fundWithFriendbot, FriendbotError } from '@/core/stellar';
 import { BackButton, Header, Main, Screen } from '@/ui/Screen';
 import { ListRow, Section } from '@/ui/Row';
-import { IconCheck, IconGlobe, IconStar, Spinner } from '@/ui/Icons';
+import { IconCheck, IconGlobe, IconStellar, Spinner } from '@/ui/Icons';
 
 /** Network: fixed to Testnet in this build. The badge can't be hidden; Mainnet is listed as coming soon. */
 export function Network() {
@@ -56,7 +56,7 @@ export function Network() {
         <Section title="Testnet tools">
           {acct ? (
             <ListRow
-              icon={funding ? <Spinner className="h-4 w-4" /> : <IconStar className="h-[17px] w-[17px]" />}
+              icon={funding ? <Spinner className="h-4 w-4" /> : <IconStellar className="h-[17px] w-[17px]" />}
               label={funding ? 'Asking Friendbot…' : `Fund ${acct.name} with Friendbot`}
               sub="Friendbot sends 10,000 XLM to a new account"
               onClick={fund}
@@ -65,7 +65,7 @@ export function Network() {
           ) : null}
           <ListRow icon={<span className="font-bold">$</span>} label="Get test USDC" sub="Circle's faucet · needs the USDC asset added first" href={NETWORK.usdcFaucetUrl} />
           <ListRow icon={<IconGlobe className="h-[17px] w-[17px]" />} label="Testnet explorer" sub="Stellar Expert · look up any account or transaction" href={NETWORK.explorerUrl} />
-          <ListRow icon={<IconStar className="h-[17px] w-[17px]" />} label="Stellar Lab faucet" sub="Backup when Friendbot is rate-limited" href={NETWORK.labFaucetUrl} />
+          <ListRow icon={<IconStellar className="h-[17px] w-[17px]" />} label="Stellar Lab faucet" sub="Backup when Friendbot is rate-limited" href={NETWORK.labFaucetUrl} />
         </Section>
       </Main>
     </Screen>

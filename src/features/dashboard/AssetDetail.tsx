@@ -89,7 +89,7 @@ export function AssetDetail() {
         <section className="flex flex-col items-center gap-2.5 pt-1">
           <AssetLogo asset={asset} size={64} />
           <div className="flex items-baseline gap-2">
-            <span className="text-[44px] font-bold leading-none tracking-[-0.035em] tabular">{formatAmount(balance)}</span>
+            <span className="text-[44px] font-bold leading-none tracking-[-0.035em] tabular">{formatAmount(balance, { max: 2 })}</span>
             <span className="text-lg font-medium text-muted">{asset.code}</span>
           </div>
           {native ? (
@@ -159,7 +159,7 @@ export function AssetDetail() {
               <span className="flex flex-1 flex-col">
                 <span className="text-sm font-semibold">{f.kind === 'in' ? 'Received' : f.kind === 'out' ? 'Sent' : f.title}</span>
                 <span className="text-xs text-muted">
-                  {f.kind === 'out' ? 'to ' : 'from '}
+                  {f.kind === 'out' || f.kind === 'created' ? 'to ' : 'from '}
                   {f.counterparty.startsWith('G') ? shortAddress(f.counterparty) : f.counterparty} · {dayLabel(f.createdAt)}
                 </span>
               </span>

@@ -16,7 +16,7 @@ import { ListRow, Section } from '@/ui/Row';
 import { NetworkDot } from '@/ui/NetworkPill';
 import { Sheet } from '@/ui/Sheet';
 import { Input, PasswordInput } from '@/ui/Field';
-import { IconChevronRight, IconClock, IconCopy, IconExternal, IconEyeOff, IconFingerprint, IconGlobe, IconKey, IconLock, IconShield, IconStar, IconTrash, IconUsers } from '@/ui/Icons';
+import { IconChevronRight, IconClock, IconCopy, IconExternal, IconEyeOff, IconFingerprint, IconGlobe, IconKey, IconLock, IconShield, IconStellar, IconTrash, IconUsers } from '@/ui/Icons';
 import { passwordStrength } from '../onboarding/password';
 
 export function Settings() {
@@ -111,7 +111,7 @@ export function Settings() {
             }
             to="/settings/network"
           />
-          <ListRow icon={<IconStar className="h-[17px] w-[17px]" />} label="Get test XLM" value="Friendbot" to="/settings/network" />
+          <ListRow icon={<IconStellar className="h-[17px] w-[17px]" />} label="Get test XLM" value="Friendbot" to="/settings/network" />
         </Section>
 
         <Section title="Security">

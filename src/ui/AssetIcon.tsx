@@ -1,6 +1,6 @@
 import { isNative, presetFor, type AssetRef } from '@/core/stellar';
 import { paletteFor } from './Orb';
-import { IconStar } from './Icons';
+import { IconStellar } from './Icons';
 
 /**
  * Asset "logo". XLM: white disc with a star. Known presets: their brand colour
@@ -13,7 +13,7 @@ export function AssetIcon({ asset, size = 42, image }: { asset: AssetRef; size?:
   if (isNative(asset)) {
     return (
       <span className="flex shrink-0 items-center justify-center rounded-full bg-text text-ground" style={style} aria-hidden="true">
-        <IconStar className="h-1/2 w-1/2" />
+        <IconStellar className="h-[52%] w-[52%]" />
       </span>
     );
   }
