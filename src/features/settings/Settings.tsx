@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useAccounts, useActiveAccount, useSession } from '@/app/session';
+import { clearQueryCache } from '@/app/queryClient';
 import { copyText } from '@/app/clipboard';
 import { useToast } from '@/app/toast';
 import { APP, SECURITY } from '@/config';
@@ -228,6 +229,7 @@ export function Settings() {
             disabled={!rmOk}
             onClick={async () => {
               await removeWallet();
+              await clearQueryCache(); // the public balance/activity cache goes with it
               navigate('/welcome', { replace: true });
             }}
             className="btn-danger disabled:opacity-50"

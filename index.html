@@ -11,9 +11,114 @@
     <link rel="apple-touch-icon" href="/favicon.svg" />
     <link rel="manifest" href="/manifest.webmanifest" />
     <title>STOVA</title>
+    <style>
+      /* Boot splash: visible before any JavaScript arrives, replaced the moment React mounts. */
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #0e0e12;
+      }
+      #root {
+        min-height: 100dvh;
+      }
+      .boot {
+        min-height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 22px;
+        background: #0e0e12;
+        color: #9a9aae;
+        font: 500 14px/1.4 ui-sans-serif, system-ui, sans-serif;
+        letter-spacing: 0.01em;
+      }
+      .boot-ring {
+        position: relative;
+        width: 112px;
+        height: 112px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .boot-ring::before,
+      .boot-ring::after {
+        content: '';
+        position: absolute;
+        border-radius: 50%;
+        border: 3px solid #26262f;
+      }
+      .boot-ring::before {
+        inset: 4px;
+        border-top-color: #b4a3ff;
+        animation: boot-spin 1s linear infinite;
+      }
+      .boot-ring::after {
+        inset: 16px;
+        border-width: 2px;
+        border-bottom-color: rgba(180, 163, 255, 0.5);
+        animation: boot-spin 1.8s linear infinite reverse;
+      }
+      .boot-glow {
+        position: absolute;
+        inset: -18px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(180, 163, 255, 0.3) 0%, rgba(180, 163, 255, 0) 68%);
+        animation: boot-glow 1.6s ease-in-out infinite;
+      }
+      .boot-word {
+        color: #f4f4f8;
+        font-weight: 700;
+        font-size: 18px;
+        letter-spacing: 0.14em;
+      }
+      @keyframes boot-spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      @keyframes boot-glow {
+        0%,
+        100% {
+          opacity: 0.55;
+          transform: scale(0.96);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.04);
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        .boot-ring::before,
+        .boot-ring::after,
+        .boot-glow {
+          animation: none;
+        }
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="boot" role="status" aria-label="Loading STOVA">
+        <div class="boot-ring">
+          <span class="boot-glow"></span>
+          <svg width="56" height="56" viewBox="0 0 64 64" aria-hidden="true">
+            <defs>
+              <linearGradient id="boot-g" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#D9CFFF" />
+                <stop offset="0.5" stop-color="#8E7CF5" />
+                <stop offset="1" stop-color="#4F3FCF" />
+              </linearGradient>
+            </defs>
+            <rect width="64" height="64" rx="19" fill="url(#boot-g)" />
+            <path d="M43 19 C40 13 20 11 20 23 C20 33 44 31 44 42 C44 53 24 53 20 46" fill="none" stroke="#1B1240" stroke-width="7" stroke-linecap="round" opacity="0.18" transform="translate(0,1.5)" />
+            <path d="M43 19 C40 13 20 11 20 23 C20 33 44 31 44 42 C44 53 24 53 20 46" fill="none" stroke="#FFFFFF" stroke-width="7" stroke-linecap="round" />
+          </svg>
+        </div>
+        <span class="boot-word">STOVA</span>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

@@ -20,15 +20,7 @@ import { Settings } from '@/features/settings/Settings';
 import { Export } from '@/features/settings/Export';
 import { Network } from '@/features/settings/Network';
 import { Accounts } from '@/features/settings/Accounts';
-import { StovaMark } from '@/ui/Logo';
-
-function Splash() {
-  return (
-    <div className="flex h-dvh items-center justify-center bg-ground">
-      <StovaMark size={64} className="animate-pulse-soft" />
-    </div>
-  );
-}
+import { Splash } from '@/ui/Splash';
 
 /** Wallet must exist (locked or unlocked). */
 function RequireWallet({ children }: { children: ReactNode }) {

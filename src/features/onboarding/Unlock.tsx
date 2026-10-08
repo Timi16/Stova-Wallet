@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAccounts, useActiveAccount, useSession } from '@/app/session';
+import { clearQueryCache } from '@/app/queryClient';
 import { SECURITY } from '@/config';
 import { shortAddress } from '@/core/keys';
 import { CooldownError, cooldownSecondsLeft, hasPasskey, removeWallet, unlock, unlockWithPasskey, WrongPasswordError } from '@/core/vault';
@@ -163,6 +164,7 @@ export function Unlock() {
             type="button"
             onClick={async () => {
               await removeWallet();
+              await clearQueryCache();
               navigate('/import', { replace: true });
             }}
             className="btn-danger"
