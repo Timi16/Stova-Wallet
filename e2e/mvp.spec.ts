@@ -84,7 +84,7 @@ test('MVP flow on Testnet: create, fund, add USDC, send, history, lock', async (
   await page.getByLabel('Amount').fill('12.5');
   await expect(page.getByText(/^web\+stellar:pay\?destination=/)).toBeVisible();
   await shot(page, '11-receive-request');
-  await page.getByRole('link', { name: 'Back' }).click();
+  await page.getByRole('button', { name: 'Back' }).click();
 
   // Add USDC
   await page.getByRole('link', { name: 'Add asset' }).click();
@@ -155,7 +155,7 @@ test('MVP flow on Testnet: create, fund, add USDC, send, history, lock', async (
   await page.getByRole('link', { name: /USD Coin/ }).click();
   await expect(page.getByText('Issued by Circle')).toBeVisible();
   await shot(page, '21-asset-usdc');
-  await page.getByRole('link', { name: 'Back' }).click();
+  await page.getByRole('button', { name: 'Back' }).click();
 
   // Settings → Lock now → Unlock
   await page.getByRole('link', { name: 'Settings' }).click();

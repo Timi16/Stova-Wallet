@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useActiveAccount, useSession } from '@/app/session';
 import { useRefreshAccount } from '@/app/queries';
 import { useToast } from '@/app/toast';
@@ -11,7 +10,6 @@ import { IconCheck, IconGlobe, IconStar, Spinner } from '@/ui/Icons';
 
 /** Network: fixed to Testnet in this build. The badge can't be hidden; Mainnet is listed as coming soon. */
 export function Network() {
-  const navigate = useNavigate();
   const toast = useToast();
   const session = useSession();
   const acct = useActiveAccount();
@@ -37,7 +35,7 @@ export function Network() {
 
   return (
     <Screen>
-      <Header left={<BackButton onClick={() => navigate(back)} />} title="Network" />
+      <Header left={<BackButton to={back} />} title="Network" />
       <Main className="pb-5">
         <section className="card flex items-start gap-3.5 border border-testnet/25 p-[18px]">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] bg-testnet/[0.12]">

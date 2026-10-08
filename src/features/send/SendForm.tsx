@@ -184,7 +184,16 @@ export function SendForm() {
   return (
     <Screen>
       <Header
-        left={<BackButton to="/home" onClick={() => { sendDraft.clear(); navigate('/home'); }} />}
+        left={
+          <BackButton
+            to="/home"
+            onClick={() => {
+              sendDraft.clear();
+              if (((window.history.state as { idx?: number } | null)?.idx ?? 0) > 0) navigate(-1);
+              else navigate('/home', { replace: true });
+            }}
+          />
+        }
         title="Send"
         right={
           <Link to="/scan" aria-label="Scan a QR code" className="icon-btn">

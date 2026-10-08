@@ -1,6 +1,20 @@
 import type { ReactNode } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { IconBack, IconClose } from './Icons';
+
+/**
+ * Back goes to the page the user came from. React Router keeps an index in
+ * history.state, so idx > 0 means there is an in-app page behind this one;
+ * otherwise (deep link, refresh) we fall back to the screen's natural parent.
+ */
+function useGoBack(fallback: string) {
+  const navigate = useNavigate();
+  return () => {
+    const idx = (window.history.state as { idx?: number } | null)?.idx ?? 0;
+    if (idx > 0) navigate(-1);
+    else navigate(fallback, { replace: true });
+  };
+}
 
 /**
  * Phone-first shell: header / scrolling main / footer, pinned to the viewport
@@ -20,33 +34,21 @@ export function Header({ left, title, right, className = '' }: { left?: ReactNod
   );
 }
 
-export function BackButton({ to, label = 'Back', onClick }: { to?: string; label?: string; onClick?: () => void }) {
-  if (onClick) {
-    return (
-      <button type="button" aria-label={label} onClick={onClick} className="icon-btn">
-        <IconBack className="h-5 w-5" />
-      </button>
-    );
-  }
+export function BackButton({ to = '/home', label = 'Back', onClick }: { to?: string; label?: string; onClick?: () => void }) {
+  const goBack = useGoBack(to);
   return (
-    <Link to={to ?? '..'} aria-label={label} className="icon-btn">
+    <button type="button" aria-label={label} onClick={onClick ?? goBack} className="icon-btn">
       <IconBack className="h-5 w-5" />
-    </Link>
+    </button>
   );
 }
 
-export function CloseButton({ to, onClick }: { to?: string; onClick?: () => void }) {
-  if (onClick) {
-    return (
-      <button type="button" aria-label="Close" onClick={onClick} className="icon-btn">
-        <IconClose className="h-5 w-5" />
-      </button>
-    );
-  }
+export function CloseButton({ to = '/home', onClick }: { to?: string; onClick?: () => void }) {
+  const goBack = useGoBack(to);
   return (
-    <Link to={to ?? '/home'} aria-label="Close" className="icon-btn">
+    <button type="button" aria-label="Close" onClick={onClick ?? goBack} className="icon-btn">
       <IconClose className="h-5 w-5" />
-    </Link>
+    </button>
   );
 }
 
