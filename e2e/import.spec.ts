@@ -78,3 +78,36 @@ test('private words never reach the network', async ({ page }) => {
   expect(joined).not.toContain(PASSWORD);
   expect(bodies.every((b) => /horizon-testnet\.stellar\.org|friendbot\.stellar\.org/.test(b))).toBe(true);
 });
+
+test('balance survives lock, unlock and reload even when Horizon is unreachable', async ({ page }) => {
+  await page.goto('/import');
+  await page.getByLabel('Your 12 or 24 words').fill(PHRASE);
+  await page.getByRole('button', { name: 'Continue' }).click();
+  await setPassword(page);
+  // The SEP-5 test account is a long-lived funded Testnet account.
+  await expect(page.getByText('Stellar Lumens')).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByText(/Updated/)).toBeVisible({ timeout: 30_000 });
+  const hero = await page.locator('span.text-5xl').innerText();
+  expect(hero).not.toBe('0.00');
+  await page.waitForTimeout(1500); // let the persisted cache flush
+
+  // Lock and unlock without reloading: same numbers, no skeleton, no "unfunded" card.
+  await page.getByRole('link', { name: 'Settings' }).click();
+  await page.getByRole('button', { name: 'Lock now' }).click();
+  await page.getByLabel('Password', { exact: true }).fill(PASSWORD);
+  await page.getByRole('button', { name: 'Unlock' }).click();
+  await page.getByRole('link', { name: 'Home' }).click();
+  await expect(page.locator('span.text-5xl')).toHaveText(hero);
+  await expect(page.getByText('Three steps to your first payment')).toHaveCount(0);
+
+  // Now cut Horizon off completely and reload: the last-known balance must still show.
+  await page.route('**/horizon-testnet.stellar.org/**', (route) => route.abort());
+  await page.reload();
+  await page.getByLabel('Password', { exact: true }).fill(PASSWORD);
+  await page.getByRole('button', { name: 'Unlock' }).click();
+  await expect(page).toHaveURL(/\/home$/);
+  await expect(page.locator('span.text-5xl')).toHaveText(hero, { timeout: 10_000 });
+  await expect(page.getByText(/Can't reach Stellar right now/)).toBeVisible({ timeout: 30_000 });
+  await expect(page.getByText('Three steps to your first payment')).toHaveCount(0);
+  expect(await page.locator('.skeleton').count()).toBe(0);
+});

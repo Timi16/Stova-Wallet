@@ -27,7 +27,8 @@ export function usePayments(publicKey: string | null | undefined) {
     initialPageParam: null as string | null,
     getNextPageParam: (last) => last.nextCursor,
     enabled: !!publicKey,
-    refetchInterval: () => (document.visibilityState === 'visible' ? STELLAR.balanceRefreshMs : false),
+    // Activity changes less often than balances; polling it at half the rate keeps Horizon's rate limit happy.
+    refetchInterval: () => (document.visibilityState === 'visible' ? STELLAR.balanceRefreshMs * 2 : false),
   });
 }
 

@@ -35,7 +35,9 @@ export function Home() {
   const hidden = !!session.vault?.settings.hideBalances;
   const mask = (v: string) => (hidden ? '••••' : v);
   const data = info.data;
-  const loading = info.isLoading && !data;
+  // No data yet (cache still restoring, first fetch pending, or an error with nothing cached) is "loading":
+  // never show 0.00 or the unfunded card until Horizon (or the cache) has actually answered.
+  const loading = !data;
   const offline = !!info.error;
   const funded = !!data?.exists;
   const feed = (payments.data?.pages[0]?.items ?? []).slice(0, 5);
@@ -115,7 +117,7 @@ export function Home() {
           )}
         </section>
 
-        {!loading && !funded && !offline && (
+        {data && !data.exists && !offline && (
           <section className="card flex flex-col gap-3.5 border border-accent/30 p-[18px]">
             <div className="flex items-start gap-3">
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-surface-2 text-accent">
